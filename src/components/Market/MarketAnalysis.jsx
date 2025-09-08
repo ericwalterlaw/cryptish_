@@ -10,30 +10,40 @@ const MarketAnalysis = () => {
 
   useEffect(() => {
     fetchCryptoData()
-    const interval = setInterval(fetchCryptoData, 30000) // Update every 30 seconds
+    const interval = setInterval(fetchCryptoData, 30000) // Refresh every 30s
     return () => clearInterval(interval)
   }, [])
 
   const fetchCryptoData = async () => {
     try {
-      const response = await axios.get(
-        'https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false&price_change_percentage=1h%2C24h%2C7d'
+      const { data } = await axios.get(
+        'https://api.coingecko.com/api/v3/coins/markets',
+        {
+          params: {
+            vs_currency: 'usd',
+            order: 'market_cap_desc',
+            per_page: 50,
+            page: 1,
+            sparkline: false,
+            price_change_percentage: '1h,24h,7d'
+          }
+        }
       )
-      setCryptos(response.data)
+      setCryptos(data)
     } catch (error) {
       console.error('Error fetching crypto data:', error)
-      // Fallback data
+      // fallback
       setCryptos([
         {
           id: 'bitcoin',
           name: 'Bitcoin',
           symbol: 'btc',
           current_price: 45000,
-          market_cap: 850000000000,
+          market_cap: 850_000_000_000,
           market_cap_rank: 1,
           price_change_percentage_24h: 2.5,
           price_change_percentage_7d_in_currency: 5.2,
-          total_volume: 25000000000
+          total_volume: 25_000_000_000
         }
       ])
     } finally {
@@ -42,16 +52,17 @@ const MarketAnalysis = () => {
   }
 
   const toggleFavorite = (cryptoId) => {
-    setFavorites(prev => 
-      prev.includes(cryptoId) 
-        ? prev.filter(id => id !== cryptoId)
+    setFavorites((prev) =>
+      prev.includes(cryptoId)
+        ? prev.filter((id) => id !== cryptoId)
         : [...prev, cryptoId]
     )
   }
 
-  const filteredCryptos = cryptos.filter(crypto =>
-    crypto.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    crypto.symbol.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredCryptos = cryptos.filter(
+    (crypto) =>
+      crypto.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      crypto.symbol.toLowerCase().includes(searchTerm.toLowerCase())
   )
 
   if (loading) {
@@ -68,9 +79,11 @@ const MarketAnalysis = () => {
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-white">Market Analysis</h1>
-          <p className="text-gray-400 mt-1">Real-time cryptocurrency market data</p>
+          <p className="text-gray-400 mt-1">
+            Real-time cryptocurrency market data
+          </p>
         </div>
-        
+
         {/* Search */}
         <div className="relative w-full sm:w-96">
           <Search className="absolute left-3 top-3 w-5 h-5 text-gray-400" />
@@ -87,21 +100,31 @@ const MarketAnalysis = () => {
       {/* Market Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-          <h3 className="text-lg font-semibold text-white mb-2">Total Market Cap</h3>
+          <h3 className="text-lg font-semibold text-white mb-2">
+            Total Market Cap
+          </h3>
           <p className="text-2xl font-bold text-primary-500">
-            ${(cryptos.reduce((acc, crypto) => acc + crypto.market_cap, 0) / 1e12).toFixed(2)}T
+            ${(cryptos.reduce((acc, c) => acc + c.market_cap, 0) / 1e12).toFixed(
+              2
+            )}
+            T
           </p>
         </div>
-        
+
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
           <h3 className="text-lg font-semibold text-white mb-2">24h Volume</h3>
           <p className="text-2xl font-bold text-blue-500">
-            ${(cryptos.reduce((acc, crypto) => acc + crypto.total_volume, 0) / 1e9).toFixed(2)}B
+            ${(cryptos.reduce((acc, c) => acc + c.total_volume, 0) / 1e9).toFixed(
+              2
+            )}
+            B
           </p>
         </div>
-        
+
         <div className="bg-gray-800 rounded-xl p-6 border border-gray-700">
-          <h3 className="text-lg font-semibold text-white mb-2">Market Dominance</h3>
+          <h3 className="text-lg font-semibold text-white mb-2">
+            Market Dominance
+          </h3>
           <p className="text-2xl font-bold text-yellow-500">BTC 40.2%</p>
         </div>
       </div>
@@ -112,20 +135,25 @@ const MarketAnalysis = () => {
           <table className="w-full">
             <thead className="bg-gray-700">
               <tr>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">#</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Name</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Price</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">24h %</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">7d %</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Market Cap</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Volume</th>
-                <th className="px-6 py-4 text-left text-sm font-medium text-gray-300">Action</th>
+                {['#', 'Name', 'Price', '24h %', '7d %', 'Market Cap', 'Volume', 'Action'].map((head) => (
+                  <th
+                    key={head}
+                    className="px-6 py-4 text-left text-sm font-medium text-gray-300"
+                  >
+                    {head}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-700">
               {filteredCryptos.map((crypto) => (
-                <tr key={crypto.id} className="hover:bg-gray-700 transition-colors">
-                  <td className="px-6 py-4 text-sm text-gray-400">{crypto.market_cap_rank}</td>
+                <tr
+                  key={crypto.id}
+                  className="hover:bg-gray-700 transition-colors"
+                >
+                  <td className="px-6 py-4 text-sm text-gray-400">
+                    {crypto.market_cap_rank}
+                  </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center space-x-3">
                       <div className="w-8 h-8 bg-primary-500 rounded-full flex items-center justify-center text-white font-semibold text-xs">
@@ -133,7 +161,9 @@ const MarketAnalysis = () => {
                       </div>
                       <div>
                         <p className="text-white font-medium">{crypto.name}</p>
-                        <p className="text-gray-400 text-sm">{crypto.symbol?.toUpperCase()}</p>
+                        <p className="text-gray-400 text-sm">
+                          {crypto.symbol?.toUpperCase()}
+                        </p>
                       </div>
                     </div>
                   </td>
@@ -141,9 +171,13 @@ const MarketAnalysis = () => {
                     ${crypto.current_price?.toLocaleString()}
                   </td>
                   <td className="px-6 py-4">
-                    <div className={`flex items-center space-x-1 ${
-                      crypto.price_change_percentage_24h >= 0 ? 'text-green-400' : 'text-red-400'
-                    }`}>
+                    <div
+                      className={`flex items-center space-x-1 ${
+                        crypto.price_change_percentage_24h >= 0
+                          ? 'text-green-400'
+                          : 'text-red-400'
+                      }`}
+                    >
                       {crypto.price_change_percentage_24h >= 0 ? (
                         <TrendingUp className="w-4 h-4" />
                       ) : (
@@ -155,11 +189,18 @@ const MarketAnalysis = () => {
                     </div>
                   </td>
                   <td className="px-6 py-4">
-                    <span className={`font-medium ${
-                      crypto.price_change_percentage_7d_in_currency >= 0 ? 'text-green-400' : 'text-red-400'
-                    }`}>
-                      {crypto.price_change_percentage_7d_in_currency >= 0 ? '+' : ''}
-                      {crypto.price_change_percentage_7d_in_currency?.toFixed(2)}%
+                    <span
+                      className={`font-medium ${
+                        crypto.price_change_percentage_7d_in_currency >= 0
+                          ? 'text-green-400'
+                          : 'text-red-400'
+                      }`}
+                    >
+                      {crypto.price_change_percentage_7d_in_currency >= 0
+                        ? '+'
+                        : ''}
+                      {crypto.price_change_percentage_7d_in_currency?.toFixed(2)}
+                      %
                     </span>
                   </td>
                   <td className="px-6 py-4 text-white">
