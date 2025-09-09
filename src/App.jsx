@@ -7,6 +7,8 @@ import MarketAnalysis from './components/Market/MarketAnalysis'
 import Portfolio from './components/Portfolio/Portfolio'
 import AdminDashboard from './components/Admin/AdminDashboard'
 import Layout from './components/Layout/Layout'
+import Transactions from './components/Transactions'
+
 
 function App() {
   const [user, setUser] = useState(null)
@@ -61,6 +63,7 @@ function App() {
             <Route path="dashboard" element={<Dashboard user={user} />} />
             <Route path="market" element={<MarketAnalysis />} />
             <Route path="portfolio" element={<Portfolio user={user} />} />
+            <Route path="transactions" element={<Transactions user={user} />} />
             {user.role === 'admin' && (
               <Route path="admin" element={<AdminDashboard />} />
             )}

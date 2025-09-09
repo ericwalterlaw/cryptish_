@@ -22,7 +22,7 @@ async function fetchData(endpoint, options = {}) {
   if (!res.ok) {
     if (res.status === 401) {
       // Auto logout on invalid token
-      localStorage.removeItem("bankToken");
+      localStorage.removeItem("token");
     }
     throw new Error(`Error ${res.status}: ${res.statusText}`);
   }

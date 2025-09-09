@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { TrendingUp, TrendingDown, Wallet, Activity } from "lucide-react";
 import { api } from "../../api";
+import { useNavigate } from "react-router-dom";
+
 
 const Dashboard = ({ user }) => {
   const [stats, setStats] = useState({
@@ -12,6 +14,8 @@ const Dashboard = ({ user }) => {
   const [recentTransactions, setRecentTransactions] = useState([]);
   const [topCryptos, setTopCryptos] = useState([]);
   const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
+
 
   useEffect(() => {
     fetchDashboardData();
@@ -89,6 +93,9 @@ const Dashboard = ({ user }) => {
           Here's what's happening with your crypto portfolio
         </p>
       </div>
+
+      
+  
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
@@ -174,19 +181,20 @@ const Dashboard = ({ user }) => {
                   className="flex items-center justify-between p-3 sm:p-4 bg-gray-700 rounded-lg"
                 >
                   <div className="flex items-center space-x-3">
-                    <div
+                   <div
                       className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
-                        tx.type === "buy"
+                        tx.type === "buy" || tx.type === "deposit"
                           ? "bg-green-500/20 text-green-400"
                           : "bg-red-500/20 text-red-400"
                       }`}
                     >
-                      {tx.type === "buy" ? (
+                      {tx.type === "buy" || tx.type === "deposit" ? (
                         <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5" />
                       ) : (
                         <TrendingDown className="w-4 h-4 sm:w-5 sm:h-5" />
                       )}
                     </div>
+
                     <div>
                       <p className="text-white font-medium text-sm sm:text-base">
                         {tx.type.toUpperCase()} {tx.symbol}

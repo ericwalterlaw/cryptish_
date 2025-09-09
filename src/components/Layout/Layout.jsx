@@ -7,6 +7,7 @@ import {
   Settings,
   LogOut,
   Shield,
+  DollarSign
 } from "lucide-react";
 
 const Layout = ({ user, onLogout }) => {
@@ -17,6 +18,8 @@ const Layout = ({ user, onLogout }) => {
     { path: "/dashboard", icon: LayoutDashboard, label: "Dashboard" },
     { path: "/market", icon: TrendingUp, label: "Market" },
     { path: "/portfolio", icon: Wallet, label: "Portfolio" },
+      { path: "/transactions", icon: DollarSign, label: "Transfer/Swap/Sell" },
+
   ];
 
   if (user.role === "admin") {
