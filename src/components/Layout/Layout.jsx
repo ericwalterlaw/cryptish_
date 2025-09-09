@@ -92,23 +92,24 @@ const Layout = ({ user, onLogout }) => {
         />
       )}
 
-      {/* Main Content */}
-      <div className="flex-1 flex flex-col">
-        {/* Top Bar (mobile only) */}
-        <header className="flex items-center justify-between bg-gray-800 p-4 lg:hidden">
-          <button
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-gray-300 hover:text-white text-2xl"
-          >
-            ☰
-          </button>
-          <h1 className="text-lg font-bold">Dashboard</h1>
-        </header>
+{/* Main Content */}
+<div className="flex-1 flex flex-col overflow-hidden">
+  {/* Top Bar (mobile only) */}
+  <header className="flex items-center justify-between bg-gray-800 p-4 lg:hidden">
+    <button
+      onClick={() => setSidebarOpen(!sidebarOpen)}
+      className="text-gray-300 hover:text-white text-2xl"
+    >
+      ☰
+    </button>
+    <h1 className="text-lg font-bold">Dashboard</h1>
+  </header>
 
-        <main className="flex-1 p-4 sm:p-6 overflow-y-auto">
-          <Outlet />
-        </main>
-      </div>
+  <main className="flex-1 p-4 sm:p-6 overflow-y-auto overflow-x-hidden">
+    <Outlet />
+  </main>
+</div>
+
     </div>
   );
 };

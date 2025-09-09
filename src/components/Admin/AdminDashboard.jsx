@@ -134,7 +134,7 @@ const fetchTransactions = async (userId) => {
   }
 
   return (
-    <div className="space-y-6">
+  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
       {/* Admin Header */}
       <div className="bg-gradient-to-r from-purple-600 to-purple-700 rounded-xl p-6 text-white">
         <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
